@@ -78,13 +78,11 @@ def do(signer, namespace, object_name, bucket_name):
     try:
         object_storage = oci.object_storage.ObjectStorageClient(config={}, signer=signer)
         autonomous_db = oci.database.DatabaseClient({}, signer=signer)
-        #namespace = object_storage.get_namespace().data
-        #bucket_name = os.environ.get("bucket")
         os.environ["TNS_ADMIN"] = "/tmp/wallet"
 
         #wallet location
         wallet_path = '/tmp/wallet'
-        # autonomous database dependencies..
+        # add your adb ocid in func.yaml
         autonomous_database_id = os.environ['db_ocid']
 
         generate_autonomous_database_wallet_details = oci.database.models.GenerateAutonomousDatabaseWalletDetails(password='YourPassword')
@@ -115,11 +113,7 @@ def do(signer, namespace, object_name, bucket_name):
         connection = cx_Oracle.connect('Username/YourPassword@DBNAME_high')
         #Get object name
         all_objects = object_storage.list_objects(namespace, bucket_name).data
-        #for new in range(len(all_objects.objects)):
-        # Get object name
-        #object_name = all_objects.objects[new].name
-        #print(object_name)
-        #logging.info(object_name)
+
         if str(object_name).lower()[-3:] == 'csv':
             # Get object name and contents of object
             object = object_storage.get_object(namespace, bucket_name, object_name)
